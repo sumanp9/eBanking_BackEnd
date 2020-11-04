@@ -1,8 +1,6 @@
-package controller;
+package com.pradhan.ebanking.eBanking_Backend.controller;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerControllerTest {
 

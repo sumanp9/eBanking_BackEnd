@@ -1,9 +1,9 @@
-package controller;
+package com.pradhan.ebanking.eBanking_Backend.controller;
 
 
 import com.pradhan.ebanking.eBanking_Backend.beans.Account;
 import com.pradhan.ebanking.eBanking_Backend.beans.Customer;
-import dto.CustomerDto;
+import com.pradhan.ebanking.eBanking_Backend.dto.CustomerDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Random;

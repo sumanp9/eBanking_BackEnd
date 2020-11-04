@@ -1,4 +1,4 @@
-package dto;
+package com.pradhan.ebanking.eBanking_Backend.dto;
 
 import com.pradhan.ebanking.eBanking_Backend.beans.Account;
 
