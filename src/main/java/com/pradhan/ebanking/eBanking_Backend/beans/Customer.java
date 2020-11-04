@@ -14,6 +14,7 @@ public class Customer {
     private String lastName;
     private String userName;
     private String email;
+    private String password;
 
     @OneToOne(mappedBy = "customer")
     private Account userAccount;
@@ -21,11 +22,12 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String userName, String email) {
+    public Customer(String firstName, String lastName, String userName, String password, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.email = email;
+        this.password = password;
     }
 
     public long getId() {
@@ -64,4 +66,19 @@ public class Customer {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Account getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(Account userAccount) {
+        this.userAccount = userAccount;
+    }
 }

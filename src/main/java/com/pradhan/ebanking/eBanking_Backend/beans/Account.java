@@ -13,26 +13,35 @@ public class Account {
 
     private int accountId;
 
-    private BigDecimal checkingBalance;
-
-    private BigDecimal savingBalance;
-
-    private Date depositDate;
-
-    private Date withdrawalDate;
-
     @OneToOne
     private Customer customer;
 
     public Account() {
     }
 
-    public Account(int accountId, BigDecimal checkingBalance, BigDecimal savingBalance, Date depositDate, Date withdrawalDate) {
+    public Account(int accountId, Customer customer) {
         this.accountId = accountId;
-        this.checkingBalance = checkingBalance;
-        this.savingBalance = savingBalance;
-        this.depositDate = depositDate;
-        this.withdrawalDate = withdrawalDate;
+        this.customer = customer;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public int getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
+
