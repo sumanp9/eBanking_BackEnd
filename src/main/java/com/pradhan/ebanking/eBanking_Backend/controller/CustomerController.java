@@ -1,9 +1,11 @@
 package com.pradhan.ebanking.eBanking_Backend.controller;
 
-
+import com.pradhan.ebanking.eBanking_Backend.dto.*;
 import com.pradhan.ebanking.eBanking_Backend.beans.Account;
 import com.pradhan.ebanking.eBanking_Backend.beans.Customer;
-import com.pradhan.ebanking.eBanking_Backend.dto.CustomerDto;
+import com.pradhan.ebanking.eBanking_Backend.repository.AccountRepository;
+import com.pradhan.ebanking.eBanking_Backend.repository.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Random;
@@ -12,21 +14,27 @@ import java.util.Random;
 @CrossOrigin(origins = "http://localhost:4200")
 public class CustomerController {
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
     @GetMapping("/")
     public String homepage(){
         return "<h1< Hello! homepage </h1>";
     }
 
-    @GetMapping("/getCustomer/{username}")
-    public Customer loginUser(@PathVariable(value = "id") String username, @RequestBody String password) throws Exception {
-        if (!username.isEmpty() && !password.isEmpty()) {
+    @PostMapping("/login")
+    public Customer loginUser(@RequestBody CustomerDto customerDto) throws Exception {
+        if (!customerDto.getUserName().isEmpty() && !customerDto.getPassword().isEmpty()) {
             //Return the username
+            return  this.customerRepository.findByUserName(customerDto.getUserName());
         }
          else {
              throw new Exception("Username not provided");
         }
-        return null;
-    }
+   }
 
     @PostMapping("/registerCustomer")
     public Customer registerUser(@RequestBody CustomerDto customerDto) {
@@ -37,6 +45,10 @@ public class CustomerController {
                 customerDto.getUserName(), customerDto.getPassword(),
                 customerDto.getEmail()
         );
+
+        System.out.println("---------------------------------");
+        System.out.println("DTO: "+ customerDto.getFirstName());
+        System.out.println(cust.getFirstName());
         Account acct =  new Account();
 
         // Using RNG to generate account number between 111111111 to 999999999
@@ -46,7 +58,8 @@ public class CustomerController {
         int rand_acct_num =  rand.nextInt(limit-low) + low;
         acct.setAccountId(rand_acct_num);
         acct.setCustomer(cust);
-        cust.setUserAccount(acct);
+        accountRepository.save(acct);
+        customerRepository.save(cust);
         // TODO: check if the accountId aleady exisits after creating one above.
         return  cust;
     }
