@@ -45,21 +45,22 @@ public class CustomerController {
                 customerDto.getUserName(), customerDto.getPassword(),
                 customerDto.getEmail()
         );
-
+        customerRepository.save(cust);
         System.out.println("---------------------------------");
-        System.out.println("DTO: "+ customerDto.getFirstName());
-        System.out.println(cust.getFirstName());
-        Account acct =  new Account();
+        System.out.println(cust.toString());
 
-        // Using RNG to generate account number between 111111111 to 999999999
-        Random rand =  new Random();
+       // Using RNG to generate account number between 111111111 to 999999999
+      /*  Random rand =  new Random();
         int low = 111111;
         int limit = 999999;
         int rand_acct_num =  rand.nextInt(limit-low) + low;
-        acct.setAccountId(rand_acct_num);
+
+        Account acct =  new Account(rand_acct_num);
+        cust.setUserAccount(acct);
         acct.setCustomer(cust);
-        accountRepository.save(acct);
-        customerRepository.save(cust);
+        System.out.println(acct.toString());
+        System.out.println(cust.toString());
+        //accountRepository.save(acct);*/
         // TODO: check if the accountId aleady exisits after creating one above.
         return  cust;
     }
