@@ -1,8 +1,9 @@
 package com.pradhan.ebanking.eBanking_Backend.beans;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.Date;
+
 
 @Entity
 public class Account {
@@ -13,10 +14,15 @@ public class Account {
 
     private int accountId;
 
-    @OneToOne
+    @OneToOne()
+    @JsonBackReference
     private Customer customer;
 
     public Account() {
+    }
+
+    public Account(int accountId) {
+        this.accountId = accountId;
     }
 
     public Account(int accountId, Customer customer) {
@@ -42,6 +48,15 @@ public class Account {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", customer=" + customer +
+                '}';
     }
 }
 

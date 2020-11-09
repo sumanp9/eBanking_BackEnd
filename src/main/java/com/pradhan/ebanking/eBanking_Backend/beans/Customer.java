@@ -1,6 +1,8 @@
 package com.pradhan.ebanking.eBanking_Backend.beans;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,7 +18,8 @@ public class Customer {
     private String email;
     private String password;
 
-    @OneToOne(mappedBy = "customer")
+    @OneToOne(mappedBy ="customer")//, cascade = CascadeType.ALL,            fetch = FetchType.LAZY, optional = false)
+    @JsonManagedReference
     private Account userAccount;
 
     public Customer() {
@@ -80,5 +83,18 @@ public class Customer {
 
     public void setUserAccount(Account userAccount) {
         this.userAccount = userAccount;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", userAccount=" + userAccount +
+                '}';
     }
 }
