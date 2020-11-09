@@ -46,21 +46,16 @@ public class CustomerController {
                 customerDto.getEmail()
         );
         customerRepository.save(cust);
-        System.out.println("---------------------------------");
-        System.out.println(cust.toString());
 
-       // Using RNG to generate account number between 111111111 to 999999999
-      /*  Random rand =  new Random();
         int low = 111111;
         int limit = 999999;
+        Random rand =  new Random();
         int rand_acct_num =  rand.nextInt(limit-low) + low;
-
-        Account acct =  new Account(rand_acct_num);
-        cust.setUserAccount(acct);
-        acct.setCustomer(cust);
+        Account acct =  new Account(rand_acct_num, cust);
         System.out.println(acct.toString());
         System.out.println(cust.toString());
-        //accountRepository.save(acct);*/
+        accountRepository.save(acct);
+
         // TODO: check if the accountId aleady exisits after creating one above.
         return  cust;
     }
