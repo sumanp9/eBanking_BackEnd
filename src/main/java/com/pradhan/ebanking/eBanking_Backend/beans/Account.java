@@ -1,6 +1,7 @@
 package com.pradhan.ebanking.eBanking_Backend.beans;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 
@@ -17,6 +18,14 @@ public class Account {
     @OneToOne()
     @JsonBackReference
     private Customer customer;
+
+    @OneToOne(mappedBy ="account")//, cascade = CascadeType.ALL,            fetch = FetchType.LAZY, optional = false)
+    @JsonManagedReference
+    private Savings savings;
+
+    @OneToOne()
+    @JsonManagedReference
+    private Checking checking;
 
     public Account() {
     }
