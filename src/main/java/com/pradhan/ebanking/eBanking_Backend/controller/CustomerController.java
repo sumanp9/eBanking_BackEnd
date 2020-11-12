@@ -1,12 +1,15 @@
 package com.pradhan.ebanking.eBanking_Backend.controller;
 
+import com.pradhan.ebanking.eBanking_Backend.beans.*;
 import com.pradhan.ebanking.eBanking_Backend.dto.*;
-import com.pradhan.ebanking.eBanking_Backend.beans.Account;
-import com.pradhan.ebanking.eBanking_Backend.beans.Customer;
 import com.pradhan.ebanking.eBanking_Backend.repository.AccountRepository;
+import com.pradhan.ebanking.eBanking_Backend.repository.CheckingAccountRepository;
 import com.pradhan.ebanking.eBanking_Backend.repository.CustomerRepository;
+import com.pradhan.ebanking.eBanking_Backend.repository.SavingsAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 import java.util.Random;
 
@@ -19,6 +22,12 @@ public class CustomerController {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private SavingsAccountRepository savingsRepository;
+
+    @Autowired
+    private CheckingAccountRepository checkingRepository;
 
     @GetMapping("/")
     public String homepage(){
@@ -56,7 +65,36 @@ public class CustomerController {
         System.out.println(cust.toString());
         accountRepository.save(acct);
 
+        createCheckingAndSavingsAccount(acct);
+
         // TODO: check if the accountId aleady exisits after creating one above.
         return  cust;
+    }
+
+    @PostMapping("/getAccountDetails")
+    public AccountDetails getAccountDetails(@RequestBody String userName) {
+        // if () checks if account is valid and exists
+
+        Account account =  customerRepository.findByUserName(userName).getUserAccount();
+
+        Savings custSavings  =  savingsRepository.findByAccountId(account.getId());
+        Checking  custChecking =  checkingRepository.findByAccountId(account.getId());
+
+        AccountDetails accountDetails = new AccountDetails();
+        accountDetails.setCheckingId(custChecking.getId());
+        accountDetails.setCheckingBalance(custChecking.getBalance());
+        accountDetails.setSavingsId(custSavings.getId());
+        accountDetails.setSavingsBalance(custSavings.getBalance());
+
+        return accountDetails;
+    }
+
+    private void createCheckingAndSavingsAccount(Account acct) {
+        //Assuming new users have not deposited yet.
+        Savings savings = new Savings(new BigDecimal(0),acct);
+        Checking checking =  new Checking(new BigDecimal(0), acct);
+        savingsRepository.save(savings);
+        checkingRepository.save(checking);
+
     }
 }
