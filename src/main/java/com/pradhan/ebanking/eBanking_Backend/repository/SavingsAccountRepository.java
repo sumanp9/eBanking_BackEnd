@@ -4,4 +4,6 @@ import com.pradhan.ebanking.eBanking_Backend.beans.Savings;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SavingsAccountRepository extends JpaRepository<Savings, Long> {
+
+    Savings findByAccountId(long accountId);
 }
