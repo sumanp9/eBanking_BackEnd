@@ -14,8 +14,7 @@ public class Savings {
     private long id;
 
     private BigDecimal balance;
-    private Date withdrawalDate;
-    private Date depositDate;
+
 
     @OneToOne
     @JsonBackReference
@@ -25,10 +24,8 @@ public class Savings {
     public Savings() {
     }
 
-    public Savings(BigDecimal balance, Date withdrawalDate, Date depositDate, Account account) {
+    public Savings(BigDecimal balance, Account account) {
         this.balance = balance;
-        this.withdrawalDate = withdrawalDate;
-        this.depositDate = depositDate;
         this.account = account;
     }
 
@@ -43,22 +40,6 @@ public class Savings {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
-    }
-
-    public Date getWithdrawalDate() {
-        return withdrawalDate;
-    }
-
-    public void setWithdrawalDate(Date withdrawalDate) {
-        this.withdrawalDate = withdrawalDate;
-    }
-
-    public Date getDepositDate() {
-        return depositDate;
-    }
-
-    public void setDepositDate(Date depositDate) {
-        this.depositDate = depositDate;
     }
 
     public Account getAccount() {

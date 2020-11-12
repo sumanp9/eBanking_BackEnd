@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 
 @Entity
@@ -15,8 +14,7 @@ public class Checking {
     private long id;
 
     private BigDecimal balance;
-    private Date withdrawalDate;
-    private Date depositDate;
+
 
     @OneToOne
     @JsonBackReference
@@ -26,10 +24,8 @@ public class Checking {
     public Checking() {
     }
 
-    public Checking(BigDecimal balance, Date withdrawalDate, Date depositDate, Account account) {
+    public Checking(BigDecimal balance, Account account) {
         this.balance = balance;
-        this.withdrawalDate = withdrawalDate;
-        this.depositDate = depositDate;
         this.account = account;
     }
 
@@ -44,22 +40,6 @@ public class Checking {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
-    }
-
-    public Date getWithdrawalDate() {
-        return withdrawalDate;
-    }
-
-    public void setWithdrawalDate(Date withdrawalDate) {
-        this.withdrawalDate = withdrawalDate;
-    }
-
-    public Date getDepositDate() {
-        return depositDate;
-    }
-
-    public void setDepositDate(Date depositDate) {
-        this.depositDate = depositDate;
     }
 
     public Account getAccount() {
