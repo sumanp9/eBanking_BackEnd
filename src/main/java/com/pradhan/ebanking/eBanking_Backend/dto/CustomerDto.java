@@ -11,6 +11,8 @@ public class CustomerDto {
     private String userName;
     private String email;
     private String password;
+    private String address;
+    private String phoneNumber;
 
     private Account account;
 
@@ -41,5 +43,13 @@ public class CustomerDto {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }
