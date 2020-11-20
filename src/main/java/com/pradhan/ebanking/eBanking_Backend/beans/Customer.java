@@ -17,6 +17,9 @@ public class Customer {
     private String userName;
     private String email;
     private String password;
+    private String address;
+    private String phoneNumber;
+
 
     @OneToOne(mappedBy ="customer")//, cascade = CascadeType.ALL,            fetch = FetchType.LAZY, optional = false)
     @JsonManagedReference
@@ -25,12 +28,14 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String userName, String password, String email) {
+    public Customer(String firstName, String lastName, String userName, String password, String email, String address, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 
     public long getId() {
@@ -83,6 +88,22 @@ public class Customer {
 
     public void setUserAccount(Account userAccount) {
         this.userAccount = userAccount;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
