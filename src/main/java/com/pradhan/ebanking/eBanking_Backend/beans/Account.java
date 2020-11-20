@@ -51,6 +51,22 @@ public class Account {
         this.accountId = accountId;
     }
 
+    public Savings getSavings() {
+        return savings;
+    }
+
+    public void setSavings(Savings savings) {
+        this.savings = savings;
+    }
+
+    public Checking getChecking() {
+        return checking;
+    }
+
+    public void setChecking(Checking checking) {
+        this.checking = checking;
+    }
+
     public Customer getCustomer() {
         return customer;
     }
