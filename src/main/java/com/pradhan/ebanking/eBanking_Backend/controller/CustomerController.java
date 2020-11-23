@@ -25,15 +25,6 @@ public class CustomerController {
     @Autowired
     private AccountService accountService;
 
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private SavingsAccountRepository savingsRepository;
-
-    @Autowired
-    private CheckingAccountRepository checkingRepository;
-
     @GetMapping("/")
     public String homepage(){
         return "<h1< Hello! homepage </h1>";
