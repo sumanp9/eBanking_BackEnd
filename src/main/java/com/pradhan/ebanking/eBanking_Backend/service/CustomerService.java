@@ -25,13 +25,41 @@ public class CustomerService {
         }
     }
 
+    public List<Customer> getAllCustomer() {
+        return this.customerRepository.findAll();
+    }
+
     public Customer registerUser(CustomerDto customerDto) {
         //TODO: Check if username or email already exists
-        //if(customerRepository.findByEmail(customerDto.getEmail() ))
-        Customer customer = createCustomer(customerDto);
+        if (isRegisteredUser(customerDto)) {
+            //if(customerRepository.findByEmail(customerDto.getEmail() ))
+            Customer customer = createCustomer(customerDto);
+            return customerRegister(customer);
+            //customerRepository.save(customer);
+            //return customer;
+        } else {
+            throw new IllegalArgumentException(customerDto.getUserName()+ " already a registered user.");
+        }
+
+    }
+
+    public Customer customerRegister(Customer customer) {
         customerRepository.save(customer);
         return customer;
+    }
 
+    private boolean isRegisteredUser(CustomerDto customerDto) {
+        if (!isValidUser(customerDto.getUserName()) || !validEmail(customerDto.getEmail())) {
+            return true;
+        } else  return  false;
+    }
+
+    private boolean validEmail(String email) {
+        List<String> emailList =  new ArrayList<>();
+        this.customerRepository.findAll().stream().map(customer -> emailList.add(customer.getEmail()));
+        if (emailList.contains(email)) {
+            return true;
+        } else return false;
     }
 
     private Customer createCustomer(CustomerDto customerDto) {
@@ -68,6 +96,7 @@ public class CustomerService {
 
     public Customer findByUserName(String userName) throws Exception {
         if (isValidUser(userName)) {
+            System.out.println("Finding here "+ userName);
             return  customerRepository.findByUserName(userName);
         } else
             throw new Exception("Username: "+ userName+ " does not exists");
