@@ -49,15 +49,21 @@ public class CustomerService {
     }
 
     private boolean isRegisteredUser(CustomerDto customerDto) {
-        if (!isValidUser(customerDto.getUserName()) || !validEmail(customerDto.getEmail())) {
+        if (!isValidUser(customerDto.getUserName())  && !validEmail(customerDto.getEmail())  &&  !this.validPhoneNumber(customerDto.getEmail())) {
             return true;
         } else  return  false;
     }
 
     private boolean validEmail(String email) {
-        List<String> emailList =  new ArrayList<>();
-        this.customerRepository.findAll().stream().map(customer -> emailList.add(customer.getEmail()));
+        List<String> emailList = this.customerRepository.findAllEmail();// new ArrayList<>();
         if (emailList.contains(email)) {
+            return true;
+        } else return false;
+    }
+
+    private boolean validPhoneNumber(String phoneNumber) {
+        List<String> phoneList = this.customerRepository.findAllPhoneNumber();
+        if (!phoneNumber.isEmpty() && phoneList.contains(phoneNumber)) {
             return true;
         } else return false;
     }
