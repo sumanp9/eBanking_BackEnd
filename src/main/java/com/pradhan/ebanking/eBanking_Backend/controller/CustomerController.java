@@ -44,6 +44,12 @@ public class CustomerController {
         return customer;
     }
 
+    @PostMapping("/getCustomerInfo")
+    public Customer getCustomerInfo(@RequestBody String userName) throws Exception {
+        Customer customer =  customerService.findByUserName(userName);
+        return customer;
+    }
+
     @PostMapping("/getAccountDetails")
     public AccountDetails getAccountDetails(@RequestBody String userName) throws Exception {
         Account account = customerService.getUserAccount(userName);
