@@ -13,7 +13,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private int accountId;
+    private long accountId;
 
     @OneToOne()
     @JsonBackReference
@@ -23,7 +23,7 @@ public class Account {
     @JsonManagedReference
     private Savings savings;
 
-    @OneToOne()
+    @OneToOne(mappedBy = "account")
     @JsonManagedReference
     private Checking checking;
 
@@ -43,7 +43,7 @@ public class Account {
         return id;
     }
 
-    public int getAccountId() {
+    public long getAccountId() {
         return accountId;
     }
 
