@@ -82,13 +82,18 @@ public class CustomerController {
 
     @PostMapping("/transferTo/checking/{amount}")
     public void transferToChecking(@PathVariable long amount, @RequestBody String userName) throws Exception {
-        Customer customer = customerService.findByUserName(userName);
-            if (customer != null) {
-                accountService.transferToChecking(customer.getUserAccount(), amount);
+            if (customerService.isValidUser(userName)) {
+                Account account =  customerService.findByUserName(userName).getUserAccount();
+                accountService.transferToChecking(account, amount);
             } else {
                 throw new NullPointerException("Customer does not exist");
             }
+    }
 
-        }
+    @PostMapping("/transferTo/anotherAccount/{amount}")
+    public void transferToOthersAccount( @PathVariable int amount, @RequestBody TransferAmountInfo transferInfo) {
+        this.customerService.isValidUser(transferInfo.getSenderUserName());
+        this.accountService.isValidAccountNumber(transferInfo.getOtherAccountNumber());
+    }
 
 }

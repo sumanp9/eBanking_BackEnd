@@ -19,7 +19,11 @@ public class CustomerService {
 
     public Customer loginUser(CustomerDto customerDto){
         if(!customerDto.getUserName().isEmpty() && !customerDto.getPassword().isEmpty()) {
-            return this.customerRepository.findByUserName(customerDto.getUserName());
+            if (isValidUser(customerDto.getUserName())) {
+                return this.customerRepository.findByUserName(customerDto.getUserName());
+            } else {
+                throw new NullPointerException("Invalid User");
+            }
         } else {
             throw new IllegalArgumentException("Username and password invalid");
         }
