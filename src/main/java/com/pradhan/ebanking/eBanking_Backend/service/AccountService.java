@@ -34,8 +34,6 @@ public class AccountService {
         Random rand =  new Random();
         int rand_acct_num =  rand.nextInt(limit-low) + low;
         Account account =  new Account(rand_acct_num, customer);
-        System.out.println(account.toString());
-        System.out.println(customer.toString());
         accountRepository.save(account);
         return account;
     }
@@ -50,8 +48,9 @@ public class AccountService {
 
 
     public AccountDetails getAccountDetails(Account account) {
-        Savings custSavings  =  savingsRepository.findByAccountId(account.getId());
-        Checking  custChecking =  checkingRepository.findByAccountId(account.getId());
+
+        Checking custChecking =  this.checkingRepository.findCheckingByAccount_AccountId(account.getAccountId());
+        Savings custSavings = this.savingsRepository.findSavingsByAccount_AccountId(account.getAccountId());
 
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.setCheckingId(custChecking.getId());
@@ -62,32 +61,32 @@ public class AccountService {
         return accountDetails;
     }
 
-    public Savings getSavingsInfo(int accountId) {
+    public Savings getSavingsInfo(long accountId) {
         //TODO: Change type of Account.accountId to long
         return accountRepository.findAccountByAccountId(accountId).getSavings();
     }
 
 
     public boolean depositSavings(long amount, long savingsId) throws Exception {
-        if (Long.valueOf(savingsId) != null & savingsId <= 0) {
-            if (isValidSavingsId(savingsId)) {
-                Savings savings = savingsRepository.findById(savingsId).get();
-                BigDecimal oldAmount = savings.getBalance();
-                BigDecimal depositAmount = new BigDecimal(amount);
-                BigDecimal newAmount = oldAmount.add(depositAmount);
-                savings.setBalance(newAmount);
-                savingsRepository.save(savings);
-                return true;
-            } else
-                throw new Exception("Unable to find Savings invalid Id");
-        } else {
+
+        if (isValidSavingsId(savingsId)) {
+            Savings savings = savingsRepository.findById(savingsId).get();
+            BigDecimal oldAmount = savings.getBalance();
+            BigDecimal depositAmount = new BigDecimal(amount);
+            BigDecimal newAmount = oldAmount.add(depositAmount);
+            savings.setBalance(newAmount);
+            savingsRepository.save(savings);
+            return true;
+
+        }
+         else {
             throw new NullPointerException("Savings Id cannot be null or less or equal to 0");
         }
 
     }
 
     public boolean withdrawSavings(long amount, long savingsId) throws Exception {
-        if (Long.valueOf(savingsId) != null & savingsId <= 0) {
+        if (isValidSavingsId(savingsId)) {
             if (isValidSavingsId(savingsId)) {
                 Savings savings = savingsRepository.findById(savingsId).get();
                 if (amount <= savings.getBalance().longValue()) {
@@ -124,16 +123,31 @@ public class AccountService {
 
 
     public void transferToChecking(Account account, long amount) {
-        Savings savings =  account.getSavings();
-        Checking checking = account.getChecking();
+        Savings savings =  savingsRepository.findSavingsByAccount_AccountId(account.getAccountId());
+        Checking checking = checkingRepository.findCheckingByAccount_AccountId(account.getAccountId());
         savings.setBalance(savings.getBalance().subtract(new BigDecimal(amount)));
-        // TODO: Why is it everytime null
-        if (checking.getBalance() == null) {
+        if (checking.getBalance().longValue() <=0) {
             checking.setBalance(new BigDecimal(amount));
         } else {
             checking.setBalance(checking.getBalance().add(new BigDecimal(amount)));
         }
         savingsRepository.save(savings);
         checkingRepository.save(checking);
+
+        //TODO: need to have transaction history containing from which account to which, date/time and amount
+    }
+
+    public boolean isValidAccountNumber(int accountNumber) {
+        if (Integer.valueOf(accountNumber) !=null) {
+            if (this.accountRepository.findAccountByAccountId(accountNumber)!=null) {
+                return true;
+            }
+            else {
+                throw new NullPointerException("Account cannot be retreieved");
+            }
+        } else {
+            throw new NullPointerException("Account Number provided is null");
+        }
+
     }
 }
