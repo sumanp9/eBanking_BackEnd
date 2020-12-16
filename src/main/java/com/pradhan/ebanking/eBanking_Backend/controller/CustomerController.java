@@ -2,18 +2,10 @@ package com.pradhan.ebanking.eBanking_Backend.controller;
 
 import com.pradhan.ebanking.eBanking_Backend.beans.*;
 import com.pradhan.ebanking.eBanking_Backend.dto.*;
-import com.pradhan.ebanking.eBanking_Backend.repository.AccountRepository;
-import com.pradhan.ebanking.eBanking_Backend.repository.CheckingAccountRepository;
-import com.pradhan.ebanking.eBanking_Backend.repository.CustomerRepository;
-import com.pradhan.ebanking.eBanking_Backend.repository.SavingsAccountRepository;
 import com.pradhan.ebanking.eBanking_Backend.service.AccountService;
 import com.pradhan.ebanking.eBanking_Backend.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-
-import java.util.Random;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -91,9 +83,13 @@ public class CustomerController {
     }
 
     @PostMapping("/transferTo/anotherAccount/{amount}")
-    public void transferToOthersAccount( @PathVariable int amount, @RequestBody TransferAmountInfo transferInfo) {
-        this.customerService.isValidUser(transferInfo.getSenderUserName());
-        this.accountService.isValidAccountNumber(transferInfo.getOtherAccountNumber());
+    public void transferToOthersAccount( @PathVariable long amount, @RequestBody TransferAmountInfo transferInfo) throws Exception {
+
+        // TODO: check if sender's account info is also correct
+            Account senderAccount =  this.customerService.getUserAccount(transferInfo.getSenderUserName());
+            Account receivingAccount = this.accountService.getAccount(transferInfo.getOtherAcctNumber());
+          //  accountService.transferToOtherAccount(senderAccount);
+
     }
 
 }
