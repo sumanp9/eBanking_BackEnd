@@ -38,6 +38,14 @@ public class AccountService {
         return account;
     }
 
+    public Account getAccount(long accountId) throws Exception {
+        if (isValidAccountNumber(accountId)) {
+            return this.accountRepository.findAccountByAccountId(accountId);
+        } else {
+            throw new Exception("Invalid Account");
+        }
+    }
+
     public void registerCheckingAndSavingsAccount(Account account) {
         // 10 is the starting amount
         Savings savings = new Savings(new BigDecimal(10),account);
@@ -137,8 +145,9 @@ public class AccountService {
         //TODO: need to have transaction history containing from which account to which, date/time and amount
     }
 
-    public boolean isValidAccountNumber(int accountNumber) {
-        if (Integer.valueOf(accountNumber) !=null) {
+    public boolean isValidAccountNumber(long accountNumber) {
+        System.out.println(accountNumber);
+        if (Long.valueOf(accountNumber) !=null) {
             if (this.accountRepository.findAccountByAccountId(accountNumber)!=null) {
                 return true;
             }
