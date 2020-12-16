@@ -60,6 +60,13 @@ public class CustomerController {
 
     }
 
+    @PostMapping("/getChecking")
+    public Checking getCheckingInfo(@RequestBody long customerId) throws Exception {
+            String userName =  customerService.getUserName(customerId);
+            Account account = customerService.getUserAccount(userName);
+            return accountService.getCheckingInfo(account.getAccountId());
+    }
+
     @PostMapping("/depositSavings/{amount}")
     public Boolean depositSavings(@PathVariable long amount, @RequestBody long savingsId) throws Exception {
         return accountService.depositSavings(amount, savingsId);
