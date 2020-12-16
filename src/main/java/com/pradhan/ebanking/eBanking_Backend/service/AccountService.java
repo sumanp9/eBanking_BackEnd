@@ -70,10 +70,11 @@ public class AccountService {
     }
 
     public Savings getSavingsInfo(long accountId) {
-        //TODO: Change type of Account.accountId to long
         return accountRepository.findAccountByAccountId(accountId).getSavings();
     }
-
+    public Checking getCheckingInfo(long accountId) {
+        return checkingRepository.findCheckingByAccount_AccountId(accountId);
+    }
 
     public boolean depositSavings(long amount, long savingsId) throws Exception {
 
