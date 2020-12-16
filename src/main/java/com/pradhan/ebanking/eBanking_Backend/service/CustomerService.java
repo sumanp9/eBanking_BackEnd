@@ -104,11 +104,31 @@ public class CustomerService {
         }
     }
 
+    public boolean isValidUserId(long customerId) {
+        List<Customer> customerList =  this.customerRepository.findAll();
+        List<Long> usersIdList = new ArrayList<>();
+        customerList.forEach(customer -> {
+            usersIdList.add(customer.getId());
+        });
+        if (Long.valueOf(customerId) !=null && usersIdList.contains(customerId)) {
+            return true;
+        } else  return false;
+    }
+
     public Customer findByUserName(String userName) throws Exception {
         if (isValidUser(userName)) {
             System.out.println("Finding here "+ userName);
             return  customerRepository.findByUserName(userName);
         } else
             throw new Exception("Username: "+ userName+ " does not exists");
+    }
+
+
+    public String getUserName(long customerId) throws Exception {
+        if (isValidUserId(customerId)) {
+            return this.customerRepository.findById(customerId).get().getUserName();
+        } else {
+            throw new Exception("The customer id is invalid.");
+        }
     }
 }
