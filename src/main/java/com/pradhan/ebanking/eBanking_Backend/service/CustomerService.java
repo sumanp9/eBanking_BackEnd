@@ -131,4 +131,10 @@ public class CustomerService {
             throw new Exception("The customer id is invalid.");
         }
     }
+
+    public long getUserId(String userName) throws Exception {
+        if (isValidUser(userName)) {
+            return findByUserName(userName).getId();
+        } else throw new NullPointerException("Invalid userName");
+    }
 }
