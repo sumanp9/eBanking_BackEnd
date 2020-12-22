@@ -131,14 +131,23 @@ public class AccountService {
     }
 
 
-    public void transferToChecking(Account account, long amount) {
+    public void transferToAccount(Account account, long amount, String accountTypeTo) {
         Savings savings =  savingsRepository.findSavingsByAccount_AccountId(account.getAccountId());
         Checking checking = checkingRepository.findCheckingByAccount_AccountId(account.getAccountId());
-        savings.setBalance(savings.getBalance().subtract(new BigDecimal(amount)));
-        if (checking.getBalance().longValue() <=0) {
-            checking.setBalance(new BigDecimal(amount));
-        } else {
-            checking.setBalance(checking.getBalance().add(new BigDecimal(amount)));
+        if (accountTypeTo.equals("checking")) {
+            savings.setBalance(savings.getBalance().subtract(new BigDecimal(amount)));
+            if (checking.getBalance().longValue() <= 0) {
+                checking.setBalance(new BigDecimal(amount));
+            } else {
+                checking.setBalance(checking.getBalance().add(new BigDecimal(amount)));
+            }
+        } else{
+            checking.setBalance(checking.getBalance().subtract(new BigDecimal(amount)));
+            if (savings.getBalance().longValue() <=0) {
+                savings.setBalance(new BigDecimal(amount));
+            } else {
+                savings.setBalance(savings.getBalance().add(new BigDecimal(amount)));
+            }
         }
         savingsRepository.save(savings);
         checkingRepository.save(checking);
