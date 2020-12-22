@@ -36,6 +36,11 @@ public class CustomerController {
         return customer;
     }
 
+    @PostMapping("/getUserId")
+    public long getUserId(@RequestBody String userName) throws Exception {
+        return customerService.getUserId(userName);
+    }
+
     @PostMapping("/getCustomerInfo")
     public Customer getCustomerInfo(@RequestBody String userName) throws Exception {
         Customer customer =  customerService.findByUserName(userName);
@@ -79,11 +84,11 @@ public class CustomerController {
 
     }
 
-    @PostMapping("/transferTo/checking/{amount}")
-    public void transferToChecking(@PathVariable long amount, @RequestBody String userName) throws Exception {
+    @PostMapping("/transferTo/{accountTypeTo}/{amount}")
+    public void transferTo(@PathVariable long amount, @PathVariable String accountTypeTo, @RequestBody String userName) throws Exception {
             if (customerService.isValidUser(userName)) {
                 Account account =  customerService.findByUserName(userName).getUserAccount();
-                accountService.transferToChecking(account, amount);
+                accountService.transferToAccount(account, amount, accountTypeTo);
             } else {
                 throw new NullPointerException("Customer does not exist");
             }
