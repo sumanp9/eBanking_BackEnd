@@ -1,9 +1,11 @@
 package com.pradhan.ebanking.eBanking_Backend.beans;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Entity
@@ -19,6 +21,10 @@ public class Checking {
     @OneToOne
     @JsonBackReference
     private Account account;
+
+    @OneToMany(mappedBy = "checking")
+    @JsonManagedReference
+    private List<TransactionHistory> transactionHistory;
 
 
     public Checking() {
@@ -48,5 +54,13 @@ public class Checking {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public List<TransactionHistory> getTransactionHistory() {
+        return transactionHistory;
+    }
+
+    public void setTransactionHistory(List<TransactionHistory> transactionHistory) {
+        this.transactionHistory = transactionHistory;
     }
 }
