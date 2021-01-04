@@ -38,6 +38,10 @@ public class AccountService {
         Random rand =  new Random();
         int rand_acct_num =  rand.nextInt(limit-low) + low;
         Account account =  new Account(rand_acct_num, customer);
+        Savings savings = new Savings(new BigDecimal(10),account);
+        Checking checking =  new Checking(new BigDecimal(10), account);
+        savingsRepository.save(savings);
+        checkingRepository.save(checking);
         accountRepository.save(account);
         return account;
     }
@@ -49,15 +53,6 @@ public class AccountService {
             throw new Exception("Invalid Account");
         }
     }
-
-    public void registerCheckingAndSavingsAccount(Account account) {
-        // 10 is the starting amount
-        Savings savings = new Savings(new BigDecimal(10),account);
-        Checking checking =  new Checking(new BigDecimal(10), account);
-        savingsRepository.save(savings);
-        checkingRepository.save(checking);
-    }
-
 
     public AccountDetails getAccountDetails(Account account) {
 

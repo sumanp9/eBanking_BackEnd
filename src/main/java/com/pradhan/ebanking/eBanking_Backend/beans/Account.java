@@ -19,7 +19,7 @@ public class Account {
     @JsonBackReference
     private Customer customer;
 
-    @OneToOne(mappedBy ="account")//, cascade = CascadeType.ALL,            fetch = FetchType.LAZY, optional = false)
+    @OneToOne(mappedBy ="account")
     @JsonManagedReference
     private Savings savings;
 
