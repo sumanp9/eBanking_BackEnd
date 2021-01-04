@@ -96,11 +96,9 @@ public class CustomerController {
 
     @PostMapping("/transferTo/anotherAccount/{amount}")
     public void transferToOthersAccount( @PathVariable long amount, @RequestBody TransferAmountInfo transferInfo) throws Exception {
-
-        // TODO: check if sender's account info is also correct
             Account senderAccount =  this.customerService.getUserAccount(transferInfo.getSenderUserName());
             Account receivingAccount = this.accountService.getAccount(transferInfo.getOtherAcctNumber());
-          //  accountService.transferToOtherAccount(senderAccount);
+            accountService.transferToOtherAccount(senderAccount, transferInfo.getSenderAccountType(), receivingAccount, amount);
 
     }
 
