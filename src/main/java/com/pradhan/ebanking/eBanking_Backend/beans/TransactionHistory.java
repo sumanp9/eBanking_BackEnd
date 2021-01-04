@@ -1,6 +1,7 @@
 package com.pradhan.ebanking.eBanking_Backend.beans;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,12 +20,15 @@ public class TransactionHistory {
     private String toAccount;
     private BigDecimal amount;
 
-    @ManyToOne
-    @JsonBackReference
+
+    @JsonIgnore
+    @ManyToOne(optional = true, fetch = FetchType.LAZY) // optional = true; -> transaction can be between checking and another bank account
+    @JoinColumn(name = "savings_id")
     private Savings savings;
 
-    @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
+    @ManyToOne(optional = true, fetch = FetchType.LAZY) // optional = true -> transaction can be between savings and another bank account
+    @JoinColumn(name = "checking_id")
     private Checking checking;
 
 
@@ -82,5 +86,21 @@ public class TransactionHistory {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public Savings getSavings() {
+        return savings;
+    }
+
+    public void setSavings(Savings savings) {
+        this.savings = savings;
+    }
+
+    public Checking getChecking() {
+        return checking;
+    }
+
+    public void setChecking(Checking checking) {
+        this.checking = checking;
     }
 }
