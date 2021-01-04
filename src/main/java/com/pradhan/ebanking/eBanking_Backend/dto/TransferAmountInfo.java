@@ -5,13 +5,16 @@ import java.util.Date;
 public class TransferAmountInfo {
 
     private String senderUserName;
+    private String senderAccountType;
     private int otherAcctNumber;
     private String accountType;
-    private Date date;
-
 
     public String getSenderUserName() {
         return senderUserName;
+    }
+
+    public String getSenderAccountType() {
+        return senderAccountType;
     }
 
     public int getOtherAcctNumber() {
