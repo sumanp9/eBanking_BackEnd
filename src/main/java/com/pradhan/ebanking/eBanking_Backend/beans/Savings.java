@@ -16,7 +16,7 @@ public class Savings {
 
     private BigDecimal balance;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JsonBackReference
     private Account account;
 

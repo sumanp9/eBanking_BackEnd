@@ -1,7 +1,6 @@
 package com.pradhan.ebanking.eBanking_Backend.beans;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -18,7 +17,7 @@ public class Checking {
     private BigDecimal balance;
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JsonBackReference
     private Account account;
 
