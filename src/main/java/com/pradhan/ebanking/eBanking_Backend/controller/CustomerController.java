@@ -30,8 +30,7 @@ public class CustomerController {
     @PostMapping("/registerCustomer")
     public Customer registerUser(@RequestBody CustomerDto customerDto) {
         Customer customer = customerService.registerUser(customerDto);
-        Account account = accountService.registerNewAccount(customer);
-        accountService.registerCheckingAndSavingsAccount(account);
+        accountService.registerNewAccount(customer);
         // TODO: check if the accountId aleady exisits after creating one above.
         return customer;
     }
