@@ -22,8 +22,7 @@ public class Checking {
     @JsonBackReference
     private Account account;
 
-    @OneToMany(mappedBy = "checking")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "checking", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TransactionHistory> transactionHistory;
 
 

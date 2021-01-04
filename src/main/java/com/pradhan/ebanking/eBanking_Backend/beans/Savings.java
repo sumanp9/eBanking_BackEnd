@@ -16,13 +16,11 @@ public class Savings {
 
     private BigDecimal balance;
 
-
     @OneToOne
     @JsonBackReference
     private Account account;
 
-    @OneToMany(mappedBy = "savings")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "savings", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TransactionHistory> transactionHistory;
 
     public Savings() {
