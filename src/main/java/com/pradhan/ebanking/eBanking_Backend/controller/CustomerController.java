@@ -99,6 +99,9 @@ public class CustomerController {
             Account receivingAccount = this.accountService.getAccount(transferInfo.getOtherAcctNumber());
             accountService.transferToOtherAccount(senderAccount, transferInfo.getSenderAccountType(), receivingAccount, amount);
 
+    @PostMapping("getTransactionHistory/{accountType}")
+    public List<TransactionHistory> getTransactionHistory(@PathVariable String accountType, @RequestBody long id) throws Exception {
+        return accountService.getTransactionHistory(accountType, id);
     }
 
 }

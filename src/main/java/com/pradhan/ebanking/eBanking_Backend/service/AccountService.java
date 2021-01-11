@@ -296,4 +296,22 @@ public class AccountService {
     }
 
 
+    public List<TransactionHistory> getTransactionHistory(String accountType, long id) {
+        if (accountType.equals(AccountType.SAVINGS.toString())) {
+            Savings savings = getSavings(id);
+            return savings.getTransactionHistory();
+        } else{
+            Checking checking = getChecking(id);
+            return checking.getTransactionHistory();
+        }
+    }
+
+    private Checking getChecking(long id) {
+        return this.checkingRepository.findById(id).get();
+    }
+
+    public Savings getSavings(long id) {
+        return this.savingsRepository.findById(id).get();
+    }
+
 }
