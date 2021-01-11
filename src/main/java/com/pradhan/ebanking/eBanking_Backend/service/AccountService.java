@@ -84,9 +84,7 @@ public class AccountService {
             BigDecimal newAmount = oldAmount.add(depositAmount);
             savings.setBalance(newAmount);
             savingsRepository.save(savings);
-
-            // TODO: need transactionType in Transaction History
-            recordSavingsDeposit(amount, savings.getAccount().getId(), savings);
+            recordSavings(amount, savings.getAccount().getId(), "Deposit", savings);
             return true;
 
         }
@@ -97,7 +95,6 @@ public class AccountService {
     }
 
     public boolean withdrawSavings(long amount, long savingsId) throws Exception {
-        if (isValidSavingsId(savingsId)) {
             if (isValidSavingsId(savingsId)) {
                 Savings savings = savingsRepository.findById(savingsId).get();
                 if (amount <= savings.getBalance().longValue()) {
@@ -105,6 +102,7 @@ public class AccountService {
                     BigDecimal newAmount = savings.getBalance().subtract(withdrawAmount);
                     savings.setBalance(newAmount);
                     savingsRepository.save(savings);
+                    recordSavings(amount, savings.getAccount().getId(), "Withdraw", savings);
                     return true;
                 } else {
                     throw new ArithmeticException("Withdraw amount is greater than remaining balance.");
@@ -113,9 +111,49 @@ public class AccountService {
             else
                 throw new Exception("Unable to find Savings invalid Id");
         }
-        else {
-            throw new NullPointerException("Savings Id cannot be null or less or equal to 0");
+
+
+
+    public Boolean depositChecking(long amount, long checkingId) {
+        if(isValidCheckingId(checkingId)) {
+            Checking checking =  checkingRepository.findById(checkingId).get();
+            BigDecimal amt = new BigDecimal(amount);
+            checking.setBalance(checking.getBalance().add(amt));
+            checkingRepository.save(checking);
+            recordChecking(amount, checking.getAccount().getId(), "Deposit", checking);
+            return true;
         }
+        else {
+            throw new NullPointerException("Not a valid Checking account!");
+        }
+    }
+
+    public Boolean withdrawChecking(long amount, long checkingId) throws Exception {
+        if (isValidCheckingId(checkingId)) {
+            Checking checking = checkingRepository.findById(checkingId).get();
+            BigDecimal withDrawAmt = new BigDecimal(amount);
+            if (amount <= checking.getBalance().longValue()) {
+                checking.setBalance(checking.getBalance().subtract(withDrawAmt));
+                checkingRepository.save(checking);
+                recordChecking(amount, checking.getAccount().getId(), "Withdraw", checking);
+                return true;
+            } else{
+                throw new ArithmeticException("Withdraw amount is greater than remaining balance");
+            }
+        } else{
+            throw new Exception("Invalid Checking Id!");
+        }
+    }
+
+    private boolean isValidCheckingId(long checkingId) {
+
+        List<Account> accountList =  accountRepository.findAll();
+        List<Long> checkingIdList =  new ArrayList<>();
+        accountList.forEach(account -> {
+            checkingIdList.add(account.getChecking().getId());
+        });
+
+        return checkingIdList.contains(checkingId);
     }
 
 
@@ -126,16 +164,15 @@ public class AccountService {
         accountList.forEach((account -> {
             savingsIdList.add(account.getSavings().getId());
         }));
-        if (savingsIdList.contains(savingsId)) {
-            return true;
-        }
-        else return false;
+
+        return savingsIdList.contains(savingsId);
     }
 
 
     public void transferToAccount(Account account, long amount, String accountTypeTo) {
         Savings savings =  savingsRepository.findSavingsByAccount_AccountId(account.getAccountId());
         Checking checking = checkingRepository.findCheckingByAccount_AccountId(account.getAccountId());
+        System.out.println(accountTypeTo);
         if (accountTypeTo.equals("checking")) {
             savings.setBalance(savings.getBalance().subtract(new BigDecimal(amount)));
             if (checking.getBalance().longValue() <= 0) {
@@ -174,12 +211,12 @@ public class AccountService {
     }
 
     public void transferToOtherAccount(Account senderAccount, String senderAccountType, Account receivingAccount, long amount) {
-        Savings receivingSavings = receivingAccount.getSavings();
+        Savings receivingSavings = savingsRepository.findSavingsByAccount_AccountId(receivingAccount.getAccountId());
         BigDecimal amt = new BigDecimal(amount);
         if (senderAccountType.equals("Savings")) {
-            Savings senderSavings = (senderAccount.getSavings());
+            Savings senderSavings = savingsRepository.findSavingsByAccount_AccountId(senderAccount.getAccountId());
             BigDecimal savingsBal = senderSavings.getBalance();
-            if (savingsBal.compareTo(amt) == 0 || savingsBal.compareTo(amt) == 1) {
+            if (savingsBal.compareTo(amt) == 1 || savingsBal.compareTo(amt) == 0) {
                 senderSavings.setBalance(savingsBal.subtract(amt));
                 receivingSavings.setBalance(receivingSavings.getBalance().add(amt));
                 savingsRepository.save(senderSavings);
@@ -190,10 +227,8 @@ public class AccountService {
                 throw new ArithmeticException("Savings Balance is lower than transferring amount");
             }
         } else if (senderAccountType.equals("Checking")) {
-            Checking senderChecking = senderAccount.getChecking();
+            Checking senderChecking = checkingRepository.findCheckingByAccount_AccountId(senderAccount.getAccountId());
             BigDecimal checkingBal = senderChecking.getBalance();
-            System.out.println("Here in checking with checking balance -> "+ checkingBal.subtract(amt));
-            System.out.println(checkingBal.compareTo(amt) == 1 || checkingBal.compareTo(amt) == 0);
 
             if (checkingBal.compareTo(amt) == 0 || checkingBal.compareTo(amt) == 1) {
                 senderChecking.setBalance(checkingBal.subtract(amt));
@@ -208,11 +243,11 @@ public class AccountService {
         }
     }
 
-    private void recordSavingsDeposit(long amount, long accountId, Savings savings) {
+    private void recordSavings(long amount, long accountId, String transactionType, Savings savings) {
         TransactionHistory transactionHistory =  new TransactionHistory();
         Date date = new Date();
         transactionHistory.setFromAccount(AccountType.SAVINGS.toString());
-        transactionHistory.setToAccount(AccountType.SAVINGS.toString());
+        transactionHistory.setToAccount(transactionType);
         transactionHistory.setAmount(new BigDecimal(amount));
         transactionHistory.setDate(date);
         transactionHistory.setSavings(savings);
@@ -221,11 +256,11 @@ public class AccountService {
 
     }
 
-    private void recordCheckingDeposit(long amount, long accountId, Checking checking) {
+    private void recordChecking(long amount, long accountId, String transactionType, Checking checking) {
         TransactionHistory transactionHistory =  new TransactionHistory();
         Date date = new Date();
         transactionHistory.setFromAccount(AccountType.CHECKING.toString());
-        transactionHistory.setToAccount(AccountType.CHECKING.toString());
+        transactionHistory.setToAccount(transactionType);
         transactionHistory.setAmount(new BigDecimal(amount));
         transactionHistory.setDate(date);
         transactionHistory.setChecking(checking);

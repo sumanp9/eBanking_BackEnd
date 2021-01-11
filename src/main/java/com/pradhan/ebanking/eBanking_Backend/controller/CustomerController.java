@@ -7,6 +7,8 @@ import com.pradhan.ebanking.eBanking_Backend.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class CustomerController {
@@ -78,9 +80,17 @@ public class CustomerController {
 
     @PostMapping("/withdrawSavings/{amount}")
     public Boolean withdrawSavings(@PathVariable long amount, @RequestBody long savingsId) throws Exception {
-
         return accountService.withdrawSavings(amount, savingsId);
+    }
 
+    @PostMapping("/depositChecking/{amount}")
+    public Boolean depositChecking(@PathVariable long amount, @RequestBody long checkingId) {
+        return accountService.depositChecking(amount, checkingId);
+    }
+
+    @PostMapping("withdrawChecking/{amount")
+    public Boolean withdrawChecking(@PathVariable long amount, @RequestBody long checkingId) throws Exception {
+        return accountService.withdrawChecking(amount, checkingId);
     }
 
     @PostMapping("/transferTo/{accountTypeTo}/{amount}")
@@ -98,6 +108,7 @@ public class CustomerController {
             Account senderAccount =  this.customerService.getUserAccount(transferInfo.getSenderUserName());
             Account receivingAccount = this.accountService.getAccount(transferInfo.getOtherAcctNumber());
             accountService.transferToOtherAccount(senderAccount, transferInfo.getSenderAccountType(), receivingAccount, amount);
+    }
 
     @PostMapping("getTransactionHistory/{accountType}")
     public List<TransactionHistory> getTransactionHistory(@PathVariable String accountType, @RequestBody long id) throws Exception {
